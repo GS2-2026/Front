@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Cabecalho } from './components/Cabecalho';
 import { Rodape } from './components/Rodape';
+import { FAQ } from './components/FAQ';
 import { Home } from './pages/Home';
 import { Dashboard } from './pages/Dashboard';
 import { Leituras } from './pages/Leituras';
@@ -25,7 +26,12 @@ function App() {
         {pagina === 'home' && <Home aoNavegar={navegar} />}
         {pagina === 'dashboard' && <Dashboard />}
         {pagina === 'leituras' && <Leituras />}
-        {pagina === 'sobre' && <Sobre />}
+        {pagina === 'sobre' && (
+          <>
+            <Sobre />
+            <FAQ />
+          </>
+        )}
         {pagina === 'contato' && <Contato />}
       </main>
       <Rodape aoNavegar={navegar} />
