@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api, ApiError } from '../services/api';
 import type { Leitura, Medidor } from '../types';
+import { consumoValido, dataHoraParaApi } from '../utils/leitura';
 
 export function Leituras() {
   const [leituras, setLeituras] = useState<Leitura[]>([]);
@@ -51,23 +52,26 @@ export function Leituras() {
 
   const validar = () => {
     const erros: Record<string, string> = {};
-    if (!idMedidor) {
-      erros.idMedidor = 'Selecione o medidor que gerou a leitura.';
+    const medidor = medidores.find((m) => m.id === Number(idMedidor));
+    if (!medidor || medidor.status !== 'ATIVO') {
+      erros.idMedidor = 'Selecione um medidor ativo que gerou a leitura.';
     }
-    const consumo = Number(consumoLitros);
-    if (!consumoLitros || Number.isNaN(consumo) || consumo <= 0) {
-      erros.consumoLitros = 'Informe um consumo em litros maior que zero.';
+    if (!consumoValido(consumoLitros)) {
+      erros.consumoLitros = 'Informe de 0 a 999999,99 litros, com até duas casas decimais.';
     }
-    if (!dataHora) {
+    if (!dataHora || Number.isNaN(new Date(dataHora).getTime())) {
       erros.dataHora = 'Informe a data e hora da leitura.';
     } else if (new Date(dataHora) > new Date()) {
       erros.dataHora = 'A data da leitura não pode ser posterior a agora.';
+    } else if (medidor && dataHora.slice(0, 10) < medidor.dataInstalacao) {
+      erros.dataHora = 'A leitura não pode ser anterior à instalação do medidor.';
     }
     return erros;
   };
 
   const salvar = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (salvando) return;
     const erros = validar();
     setErrosCampos(erros);
     if (Object.keys(erros).length > 0) return;
@@ -77,9 +81,10 @@ export function Leituras() {
       const nova = await api.criarLeitura({
         idMedidor: Number(idMedidor),
         consumoLitros: Number(consumoLitros),
-        dataHoraLeitura: new Date(dataHora).toISOString(),
+        dataHoraLeitura: dataHoraParaApi(dataHora),
       });
-      setLeituras((atuais) => [nova, ...atuais]);
+      setLeituras((atuais) => [...atuais, nova].sort((a, b) => a.id - b.id));
+      setErro(null);
       setModalAberto(false);
       setSucesso('Leitura registrada com sucesso.');
     } catch (err) {
@@ -145,7 +150,7 @@ export function Leituras() {
           <div className="alerta alerta-erro">
             <span>!</span>
             <div>
-              <strong>Erro ao carregar.</strong>
+              <strong>Não foi possível concluir a operação.</strong>
               <div style={{ marginTop: '4px' }}>{erro}</div>
             </div>
           </div>
@@ -240,7 +245,7 @@ export function Leituras() {
                   onChange={(e) => setIdMedidor(e.target.value)}
                 >
                   <option value="">Selecione um medidor</option>
-                  {medidores.map((m) => (
+                  {medidores.filter((m) => m.status === 'ATIVO').map((m) => (
                     <option key={m.id} value={m.id}>
                       {m.numeroSerie} (residência {m.idResidencia})
                     </option>
@@ -256,8 +261,9 @@ export function Leituras() {
                 <input
                   id="consumo"
                   type="number"
-                  min="1"
-                  step="1"
+                  min="0"
+                  max="999999.99"
+                  step="0.01"
                   value={consumoLitros}
                   className={errosCampos.consumoLitros ? 'erro' : ''}
                   onChange={(e) => setConsumoLitros(e.target.value)}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api, ApiError } from '../services/api';
 import type { Residencia, Medidor, Leitura } from '../types';
+import { formatarDataInstalacao } from '../utils/leitura';
 
 export function Dashboard() {
   const [residencias, setResidencias] = useState<Residencia[]>([]);
@@ -8,7 +9,9 @@ export function Dashboard() {
   const [leituras, setLeituras] = useState<Leitura[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
-  const [filtroStatus, setFiltroStatus] = useState<'TODOS' | 'ATIVO' | 'INATIVO'>('TODOS');
+  const [filtroStatus, setFiltroStatus] = useState<'TODOS' | Medidor['status']>(
+    'TODOS'
+  );
 
   const carregar = async () => {
     setCarregando(true);
@@ -43,18 +46,19 @@ export function Dashboard() {
   const consumoMedio =
     leituras.length > 0 ? Math.round(consumoTotal / leituras.length) : 0;
   const medidoresAtivos = medidores.filter((m) => m.status === 'ATIVO').length;
-  const totalMoradores = residencias.reduce((soma, r) => soma + r.qtdMoradores, 0);
+  const totalMoradores = residencias.reduce(
+    (soma, r) => soma + r.qtdMoradores,
+    0
+  );
 
-  const formatarNumero = (n: number) => new Intl.NumberFormat('pt-BR').format(n);
+  const formatarNumero = (n: number) =>
+    new Intl.NumberFormat('pt-BR').format(n);
 
-  const formatarData = (iso: string) =>
-    new Date(iso).toLocaleString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+  const classeBadge = (status: Medidor['status']) => {
+    if (status === 'ATIVO') return 'bg-emerald-100 text-emerald-800';
+    if (status === 'MANUTENCAO') return 'bg-amber-100 text-amber-800';
+    return 'bg-slate-100 text-slate-600';
+  };
 
   return (
     <section className="py-12 md:py-16">
@@ -165,13 +169,14 @@ export function Dashboard() {
               id="filtro-status"
               value={filtroStatus}
               onChange={(e) =>
-                setFiltroStatus(e.target.value as 'TODOS' | 'ATIVO' | 'INATIVO')
+                setFiltroStatus(e.target.value as 'TODOS' | Medidor['status'])
               }
               className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-100"
             >
               <option value="TODOS">Todos os status</option>
               <option value="ATIVO">Apenas ativos</option>
               <option value="INATIVO">Apenas inativos</option>
+              <option value="MANUTENCAO">Em manutenção</option>
             </select>
           </div>
 
@@ -225,15 +230,13 @@ export function Dashboard() {
                           : `ID ${medidor.idResidencia}`}
                       </td>
                       <td className="px-4 py-3 text-slate-700">
-                        {formatarData(medidor.dataInstalacao)}
+                        {formatarDataInstalacao(medidor.dataInstalacao)}
                       </td>
                       <td className="px-4 py-3">
                         <span
-                          className={`inline-block rounded-full px-2.5 py-1 text-xs font-semibold ${
-                            medidor.status === 'ATIVO'
-                              ? 'bg-emerald-100 text-emerald-800'
-                              : 'bg-slate-100 text-slate-600'
-                          }`}
+                          className={`inline-block rounded-full px-2.5 py-1 text-xs font-semibold ${classeBadge(
+                            medidor.status
+                          )}`}
                         >
                           {medidor.status}
                         </span>
