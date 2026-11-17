@@ -45,3 +45,22 @@ Nenhuma biblioteca externa de requisição é utilizada. Todas as chamadas HTTP 
 ---
 
 ## Estrutura de pastas
+
+    src/
+      components/
+        Cabecalho.tsx      Menu de navegação principal
+        Rodape.tsx         Rodapé institucional
+        FAQ.tsx            Seção de perguntas frequentes
+      pages/
+        Home.tsx           Página inicial com apresentação do projeto
+        Dashboard.tsx      Painel com KPIs e tabela de medidores
+        Leituras.tsx       Listagem, criação e exclusão de leituras
+        Sobre.tsx          Informações do projeto, ODS e equipe
+        Contato.tsx        Formulário de contato com validação
+      services/
+        api.ts             Cliente HTTP centralizado
+      types/
+        index.ts           Interfaces e tipagens do domínio
+      App.tsx              Composição da aplicação e navegação
+      App.css              Estilos globais e dos componentes
+      main.tsx             Ponto de entrada
