@@ -11,7 +11,7 @@ export interface Medidor {
   idResidencia: number;
   numeroSerie: string;
   dataInstalacao: string;
-  status: "ATIVO" | "INATIVO";
+  status: "ATIVO" | "INATIVO" | "MANUTENCAO";
 }
 
 export interface Leitura {

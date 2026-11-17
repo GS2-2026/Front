@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api, ApiError } from '../services/api';
 import type { Residencia, Medidor, Leitura } from '../types';
+import { formatarDataInstalacao } from '../utils/leitura';
 
 export function Dashboard() {
   const [residencias, setResidencias] = useState<Residencia[]>([]);
@@ -8,7 +9,7 @@ export function Dashboard() {
   const [leituras, setLeituras] = useState<Leitura[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
-  const [filtroStatus, setFiltroStatus] = useState<'TODOS' | 'ATIVO' | 'INATIVO'>('TODOS');
+  const [filtroStatus, setFiltroStatus] = useState<'TODOS' | Medidor['status']>('TODOS');
 
   const carregar = async () => {
     setCarregando(true);
@@ -47,15 +48,6 @@ export function Dashboard() {
 
   const formatarNumero = (n: number) =>
     new Intl.NumberFormat('pt-BR').format(n);
-
-  const formatarData = (iso: string) =>
-    new Date(iso).toLocaleString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
 
   return (
     <section className="secao">
@@ -134,12 +126,13 @@ export function Dashboard() {
               id="filtro-status"
               value={filtroStatus}
               onChange={(e) =>
-                setFiltroStatus(e.target.value as 'TODOS' | 'ATIVO' | 'INATIVO')
+                setFiltroStatus(e.target.value as 'TODOS' | Medidor['status'])
               }
             >
               <option value="TODOS">Todos os status</option>
               <option value="ATIVO">Apenas ativos</option>
               <option value="INATIVO">Apenas inativos</option>
+              <option value="MANUTENCAO">Em manutenção</option>
             </select>
           </div>
           <div style={{ marginLeft: 'auto', fontSize: '0.88rem', color: 'var(--cinza-500)' }}>
@@ -175,7 +168,7 @@ export function Dashboard() {
                           ? `${residencia.codigoResidencia} - ${residencia.endereco}`
                           : `ID ${medidor.idResidencia}`}
                       </td>
-                      <td>{formatarData(medidor.dataInstalacao)}</td>
+                      <td>{formatarDataInstalacao(medidor.dataInstalacao)}</td>
                       <td>
                         <span
                           className={`badge ${medidor.status === 'ATIVO' ? 'badge-verde' : 'badge-cinza'}`}
