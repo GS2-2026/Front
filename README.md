@@ -1,6 +1,20 @@
-# EcoComunidade - Front-end
+# EcoComunidade
 
 Interface web para monitoramento comunitário de consumo de água. Permite acompanhar residências, medidores e leituras em um dashboard consolidado, identificar padrões de consumo e registrar novas medições.
+
+**Global Solution 2026/2 - CitizenTech - FIAP**
+
+---
+
+## Objetivo
+
+O desperdício de água é um dos problemas urbanos mais graves e menos visíveis. Em comunidades onde o consumo não é monitorado, vazamentos passam meses sem ser detectados e não há base de dados para orientar políticas de uso consciente.
+
+O EcoComunidade resolve isso ao digitalizar a leitura de medidores: cada residência registra seu consumo, e a plataforma consolida os dados em indicadores que permitem identificar picos anômalos, comparar consumo entre unidades e acompanhar a evolução ao longo do tempo.
+
+A aplicação atende o ODS 6 (Água Potável e Saneamento) e o ODS 11 (Cidades e Comunidades Sustentáveis) da Agenda 2030 da ONU.
+
+---
 
 ## Integrantes
 
@@ -11,64 +25,23 @@ Interface web para monitoramento comunitário de consumo de água. Permite acomp
 | Henrique Soares Serra | 573618 | 1TDSPI |
 | Arthur Chang Skolimoski | 572510 | 1TDSPK |
 
-## Deploy
+**Turma:** 1TDS
+**Semestre:** 2026/2
 
-- Aplicação: ([URL do Vercel](https://front-two-self.vercel.app/))
-- API: https://ecocomunidade-api.onrender.com/api
+---
 
-## Stack
+## Tecnologias
 
-- React 19
-- TypeScript
-- Vite
-- React Router não utilizado, navegação por estado
-- API REST consumida via fetch
+| Tecnologia | Uso |
+|---|---|
+| React 19 | Biblioteca de interface e componentização |
+| TypeScript | Tipagem estática de props, estados e respostas da API |
+| Vite | Build e servidor de desenvolvimento |
+| Fetch API | Requisições HTTP para a API REST Java |
+| CSS3 | Estilização, layout responsivo com Flexbox e Grid |
 
-## Funcionalidades
+Nenhuma biblioteca externa de requisição é utilizada. Todas as chamadas HTTP são feitas com a Fetch API nativa do navegador.
 
-- Página inicial com apresentação do projeto e indicadores
-- Dashboard com KPIs calculados a partir das leituras reais
-- Listagem de medidores com filtro por status
-- Registro de leituras com validação de formulário
-- Exclusão de leituras com confirmação
-- Página institucional com ODS relacionados e equipe
-- Formulário de contato com validação de campos
-- Layout responsivo, com menu adaptado para dispositivos móveis
-
-## Acessibilidade e usabilidade
-
-O projeto segue as heurísticas de Nielsen, com atenção especial a:
-
-- Visibilidade do status do sistema (estados de carregamento, feedback de sucesso e erro)
-- Prevenção de erros (validação de campos antes do envio)
-- Controle e liberdade do usuário (mensagens claras, confirmação antes de excluir)
-- Consistência e padrão (componentes reutilizáveis, paleta única)
-- Reconhecimento em vez de memorização (rótulos descritivos, dicas de preenchimento)
-
-## Como rodar localmente
-
-Clone o repositório e instale as dependências:
-
-    npm install
-
-Crie um arquivo `.env` na raiz do projeto com a URL da API:
-
-    VITE_API_BASE_URL=https://ecocomunidade-api.onrender.com/api
-
-Inicie o servidor de desenvolvimento:
-
-    npm run dev
-
-A aplicação estará disponível em `http://localhost:5173`.
-
-Para gerar a build de produção:
-
-    npm run build
+---
 
 ## Estrutura de pastas
-
-    src/
-      components/    Componentes reutilizáveis (Cabecalho, Rodape)
-      pages/         Páginas da aplicação
-      services/      Cliente HTTP da API
-      types/         Tipagens TypeScript
