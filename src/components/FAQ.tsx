@@ -41,7 +41,7 @@ const PERGUNTAS: Pergunta[] = [
     id: 'unidade',
     pergunta: 'Em que unidade o consumo é medido?',
     resposta:
-      'O consumo é sempre registrado em litros (L). O Dashboard converte automaticamente para a mesma unidade e exibe os totais com separador de milhar, facilitando a leitura de volumes maiores.',
+      'O consumo é sempre registrado em litros (L) consumidos no período, e não o valor acumulado que aparece no visor do hidrômetro. O Dashboard converte automaticamente para a mesma unidade e exibe os totais com separador de milhar.',
   },
   {
     id: 'dados',
@@ -65,40 +65,58 @@ export function FAQ() {
   }
 
   return (
-    <section className="faq" aria-labelledby="faq-titulo">
-      <p className="faq-sobretitulo">Dúvidas</p>
-      <h2 id="faq-titulo" className="faq-titulo">
+    <section
+      aria-labelledby="faq-titulo"
+      className="mx-auto w-full max-w-4xl px-6 py-16"
+    >
+      <p className="mb-2 text-xs font-bold uppercase tracking-[0.12em] text-emerald-700">
+        Dúvidas
+      </p>
+
+      <h2
+        id="faq-titulo"
+        className="mb-2 text-3xl font-bold text-slate-900"
+      >
         Perguntas frequentes
       </h2>
-      <p className="faq-descricao">
+
+      <p className="mb-8 text-slate-600">
         Respostas para as dúvidas mais comuns sobre o uso da plataforma.
       </p>
 
-      <div className="faq-lista">
+      <div className="flex flex-col gap-3">
         {PERGUNTAS.map((item) => {
           const estaAberta = aberta === item.id;
 
           return (
             <div
               key={item.id}
-              className={`faq-item ${estaAberta ? 'faq-item--aberta' : ''}`}
+              className={`overflow-hidden rounded-xl border bg-white transition-colors ${
+                estaAberta
+                  ? 'border-emerald-500 shadow-sm'
+                  : 'border-slate-200'
+              }`}
             >
               <button
                 type="button"
-                className="faq-pergunta"
                 onClick={() => alternar(item.id)}
                 aria-expanded={estaAberta}
                 aria-controls={`faq-resposta-${item.id}`}
+                className="flex w-full cursor-pointer items-center justify-between gap-4 px-5 py-[1.125rem] text-left font-semibold text-slate-900 hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-emerald-500 focus-visible:-outline-offset-2"
               >
                 <span>{item.pergunta}</span>
-                <span className="faq-icone" aria-hidden="true">
+
+                <span
+                  aria-hidden="true"
+                  className="grid size-7 shrink-0 place-items-center rounded-full bg-emerald-50 text-xl leading-none text-emerald-700"
+                >
                   {estaAberta ? '−' : '+'}
                 </span>
               </button>
 
               <div
                 id={`faq-resposta-${item.id}`}
-                className="faq-resposta"
+                className="px-5 pb-5 leading-relaxed text-slate-700"
                 role="region"
                 hidden={!estaAberta}
               >
