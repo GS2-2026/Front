@@ -149,8 +149,7 @@ O layout foi validado nas três resoluções exigidas, sem rolagem horizontal, c
 | Repositório GitHub | https://github.com/GS2-2026/Front |
 | Aplicação publicada | https://front-two-self.vercel.app |
 | API REST | https://ecocomunidade-api.onrender.com/api/ |
-| Vídeo de demonstração | PREENCHER |
-| Contato | PREENCHER |
+| Vídeo de demonstração | https://youtu.be/YdVftR3J1bs |
 
 ---
 
